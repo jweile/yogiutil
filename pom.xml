@@ -37,10 +37,10 @@
     </license>
     </licenses>
 
-<!--    <scm>
-      <connection>scm:svn:http://metagenome.ncl.ac.uk/subversion/ondex/harness/</connection>
-      <url>http://metagenome.ncl.ac.uk/subversion/ondex/harness/</url>
-    </scm>-->
+    <scm>
+      <connection>scm:hg:ssh://hg@bitbucket.org/jweile/yogiutil</connection>
+      <url>https://bitbucket.org/jweile/yogiutil</url>
+    </scm>
     
     <build>
         <plugins>
