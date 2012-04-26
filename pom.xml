@@ -12,7 +12,7 @@
     <name>yogiutil</name>
     <description>Various useful utility classes.</description>
     
-    <url>http://homepages.cs.ncl.ac.uk/j.weile/projects/harness/</url>
+    <url>http://bio-nexus.ncl.ac.uk/projects/yogiutil</url>
 
     <developers>
       <developer>
@@ -67,6 +67,28 @@
                 </executions>
             </plugin>
             
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0-beta-2</version>
+                <configuration>
+                  <reportPlugins>
+                    <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                      <artifactId>maven-project-info-reports-plugin</artifactId>
+                      <version>2.2</version>
+                      <reports>
+                        <report>index</report>
+                        <report>license</report>
+                        <report>project-team</report>
+                        <report>scm</report>
+                        <report>summary</report>
+                      </reports>
+                    </plugin>
+                  </reportPlugins>
+                </configuration>
+            </plugin>
+            
         </plugins>
     </build>
     
@@ -84,9 +106,14 @@
           <id>ncl.vm</id>
           <url>http://bio-nexus.ncl.ac.uk:8081/nexus/content/repositories/snapshots/</url>
       </snapshotRepository>
+      <site>
+          <id>ncl.vm</id>
+          <url>scp://bio-nexus.ncl.ac.uk/var/www/projects/yogiutil</url>
+      </site>
     </distributionManagement>
     
     <properties>
       <netbeans.hint.license>lgpl30</netbeans.hint.license>
     </properties>
+    
 </project>
