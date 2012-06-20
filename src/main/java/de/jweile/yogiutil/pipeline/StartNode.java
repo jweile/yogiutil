@@ -18,7 +18,6 @@ package de.jweile.yogiutil.pipeline;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.Exchanger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +35,8 @@ public abstract class StartNode<O> extends Node<Void,O> {
     
     @Override
     public void run() {
+        
+        before();
         
         Queue<O> qOut = new LinkedList<O>();
         boolean more = true;
@@ -63,6 +64,7 @@ public abstract class StartNode<O> extends Node<Void,O> {
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted "+name);
         } finally {
+            
             try {
                 //shutdown next node
                 outExchanger.exchange(null);
@@ -70,6 +72,8 @@ public abstract class StartNode<O> extends Node<Void,O> {
                 Logger.getLogger(StartNode.class.getName())
                         .log(Level.SEVERE, "Shutdown propagation interrupted!", ex);
             }
+            
+            after();
         }
     }
 }

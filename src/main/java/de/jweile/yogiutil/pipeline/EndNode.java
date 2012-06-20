@@ -32,6 +32,9 @@ public abstract class EndNode<I> extends Node<I,Void> {
 
     @Override
     public void run() {
+        
+        before();
+        
         Queue<I> qIn = new LinkedList<I>();
         
         try {
@@ -49,6 +52,8 @@ public abstract class EndNode<I> extends Node<I,Void> {
             
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted "+name);
+        } finally {
+            after();
         }
     }
 

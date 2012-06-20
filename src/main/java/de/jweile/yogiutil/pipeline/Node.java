@@ -82,14 +82,14 @@ public abstract class Node<I,O> implements Runnable {
             
         } finally {
             
-            after();
-            
             try {
                 outExchanger.exchange(null);//shutdown next node;
             } catch (InterruptedException ex) {
                 Logger.getLogger(Node.class.getName())
                         .log(Level.SEVERE, "Shutdown propagation interrupted!", ex);
             }
+            
+            after();
         }
     }
 

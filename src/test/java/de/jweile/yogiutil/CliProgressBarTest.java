@@ -28,7 +28,7 @@ public class CliProgressBarTest extends TestCase {
         CliProgressBar pb = new CliProgressBar(100);
         for (int i = 0 ; i < 100; i++) {
             try {
-                Thread.sleep(10);
+                Thread.sleep(30);
             } catch (InterruptedException ex) {}
             pb.next();
         }

@@ -16,6 +16,8 @@
  */
 package de.jweile.yogiutil;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * A progress bar for the commandline. Usage example:
  * 
@@ -37,16 +39,19 @@ public class CliProgressBar {
     private int last = -1;
     private int curr = 0;
     
+    private long startTime;
+    
     /**
      * Creates the progress bar object.
      * @param max Number of steps you're iterating over.
      */
     public CliProgressBar(int max) {
         this.max = max;
+        startTime = System.currentTimeMillis();
     }
     
     /**
-     * Indicate the one step in the iteration has been completed. 
+     * Indicate that one step in the iteration has been completed. 
      * This will update the progress bar.
      */
     public void next() {
@@ -54,7 +59,16 @@ public class CliProgressBar {
         int bars = curr * 70 / max;
         int percent = curr * 100 / max;
         
+        long elapsed = System.currentTimeMillis() - startTime;
+        
         if (percent > last) {
+            
+            String etaString = "?";
+            if (curr > 0) {
+                long perUnitOfWork = elapsed / curr;
+                long eta = (max - curr) * perUnitOfWork;
+                etaString = time(eta);
+            }
             
             StringBuilder b = new StringBuilder();
             for (int i = 0; i < bars; i++) {
@@ -65,7 +79,9 @@ public class CliProgressBar {
             }
             b.append("| ")
              .append(percent)
-             .append("%\r");
+             .append("% ETA: ")
+             .append(etaString)
+             .append("\r");
             
             System.out.print(b.toString());
             
@@ -74,7 +90,62 @@ public class CliProgressBar {
         
         
         if (++curr == max) {
-            System.out.println("done!");
+            System.out.println("\nDone! Elapsed: "+time(elapsed));
         }
+    }
+    
+    private String time(long t) {
+        StringBuilder b = new StringBuilder();
+        
+        for (Unit unit : Unit.getUnits()) {
+            long uValue = t / unit.inMillis();
+            if (uValue > 0) {
+                b.append(uValue).append(unit.getLabel()).append(", ");
+            }
+            t = t % unit.inMillis();
+        }
+        
+        //remove last comma
+        if (b.length() >= 2) {
+            b.delete(b.length()-2, b.length());
+        }
+        
+        if (b.length() == 0) {
+            b.append("due");
+        }
+        
+        return b.toString();
+    }
+    
+    private static enum Unit {
+        
+        MILLI(1,"ms"), 
+        SEC(1000*MILLI.ms,"s"), 
+        MIN(60*SEC.ms,"m"), 
+        HOUR(60*MIN.ms,"h"), 
+        DAY(24*HOUR.ms,"d"), 
+        WEEK(7*DAY.ms,"wk");
+        
+        private long ms;
+        private String label;
+
+        private Unit(long conversion, String label) {
+            this.ms = conversion;
+            this.label = label;
+        }
+        
+        public static Unit[] getUnits() {
+            return new Unit[]{WEEK, DAY, HOUR, MIN, SEC};
+        }
+
+        private long inMillis() {
+            return ms;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+        
+        
     }
 }
