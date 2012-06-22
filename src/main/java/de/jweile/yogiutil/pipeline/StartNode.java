@@ -67,6 +67,8 @@ public abstract class StartNode<O> extends Node<Void,O> {
             
             try {
                 //shutdown next node
+                Logger.getLogger(StartNode.class.getName())
+                        .info(name + " initiating shutdown.");
                 outExchanger.exchange(null);
             } catch (InterruptedException ex) {
                 Logger.getLogger(StartNode.class.getName())

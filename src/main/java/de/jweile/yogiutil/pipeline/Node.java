@@ -83,6 +83,8 @@ public abstract class Node<I,O> implements Runnable {
         } finally {
             
             try {
+                Logger.getLogger(Node.class.getName())
+                        .info(name+" shutting down and propagating.");
                 outExchanger.exchange(null);//shutdown next node;
             } catch (InterruptedException ex) {
                 Logger.getLogger(Node.class.getName())

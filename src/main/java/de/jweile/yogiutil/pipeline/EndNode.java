@@ -18,7 +18,7 @@ package de.jweile.yogiutil.pipeline;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.Exchanger;
+import java.util.logging.Logger;
 
 /**
  *
@@ -53,6 +53,9 @@ public abstract class EndNode<I> extends Node<I,Void> {
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted "+name);
         } finally {
+            
+            Logger.getLogger(EndNode.class.getName())
+                    .info(name+" shutting down.");
             after();
         }
     }

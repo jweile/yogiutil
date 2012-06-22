@@ -65,8 +65,8 @@ public class CliProgressBar {
             
             String etaString = "?";
             if (curr > 0) {
-                long perUnitOfWork = elapsed / curr;
-                long eta = (max - curr) * perUnitOfWork;
+                double perUnitOfWork = (double)elapsed / (double)curr;
+                long eta = (long)((double)(max - curr) * perUnitOfWork);
                 etaString = time(eta);
             }
             
@@ -81,7 +81,7 @@ public class CliProgressBar {
              .append(percent)
              .append("% ETA: ")
              .append(etaString)
-             .append("\r");
+             .append("                 \r");
             
             System.out.print(b.toString());
             
