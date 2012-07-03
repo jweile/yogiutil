@@ -94,6 +94,12 @@ public class CliProgressBar {
         }
     }
     
+    /**
+     * Express the given number of milliseconds as a string that looks like:
+     * "1d, 2h, 12m, 3s"
+     * @param t a number of milliseconds
+     * @return the string as described above.
+     */
     private String time(long t) {
         StringBuilder b = new StringBuilder();
         
@@ -117,6 +123,9 @@ public class CliProgressBar {
         return b.toString();
     }
     
+    /**
+     * Time units
+     */
     private static enum Unit {
         
         MILLI(1,"ms"), 
@@ -134,14 +143,26 @@ public class CliProgressBar {
             this.label = label;
         }
         
+        /**
+         * returns all time units.
+         * @return all time units.
+         */
         public static Unit[] getUnits() {
             return new Unit[]{WEEK, DAY, HOUR, MIN, SEC};
         }
 
+        /**
+         * the duration of this unit in milliseconds
+         * @return duration of this unit in milliseconds
+         */
         private long inMillis() {
             return ms;
         }
 
+        /**
+         * The common label for this unit. (e.g. "s" for second)
+         * @return 
+         */
         public String getLabel() {
             return label;
         }

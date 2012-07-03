@@ -22,17 +22,49 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author jweile
+ * <p>The first node in the pipeline. Produces output objects of type <code>O</code>. </p>
+ * 
+ * <p>When implementing the <code>process()</code> method, make sure that when the 
+ * pipeline has reached its end, return <b><code>null</code></b> to signal all 
+ * subsequent nodes to shut down.</p>
+ * 
+ * <p>Example:</p>
+<code><pre>new StartNode&lt;String&gt;("n1") {
+
+    int i = 0;
+    String[] list = {"a","b","c","d","e","f","g"};
+
+    public String process(Void v) {
+        if (i &lt; list.length) {
+            return list[i++];
+        } else {
+            return null;
+        }
+    }
+}
+</pre></code>
+ * 
+ * @author Jochen Weile <jochenweile@gmail.com>
  */
 public abstract class StartNode<O> extends Node<Void,O> {
 
+    /**
+     * The number of object appended to the queue before it is passed on to the 
+     * next node.
+     */
     public static final int QUEUE_LENGTH = 10;
     
+    /**
+     * Constructor.
+     * @param name The node name.
+     */
     public StartNode(String name) {
         super(name);
     }
     
+    /**
+     * Executed by the pipeline executor.
+     */
     @Override
     public void run() {
         
@@ -73,9 +105,9 @@ public abstract class StartNode<O> extends Node<Void,O> {
             } catch (InterruptedException ex) {
                 Logger.getLogger(StartNode.class.getName())
                         .log(Level.SEVERE, "Shutdown propagation interrupted!", ex);
+            } finally {
+                after();
             }
-            
-            after();
         }
     }
 }

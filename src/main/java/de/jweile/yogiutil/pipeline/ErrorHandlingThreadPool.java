@@ -26,13 +26,24 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
- * @author jweile
+ * A thread pool that is able to handle exceptions occurring during execution
+ * of any of its members.
+ * 
+ * @author Jochen Weile <jochenweile@gmail.com>
  */
 class ErrorHandlingThreadPool extends ThreadPoolExecutor {
     
+    /**
+     * A list of the errors that have occurred.
+     */
     private volatile List<Throwable> errors = new ArrayList<Throwable>();
     
+    /**
+     * Constructor.
+     * 
+     * @param threads 
+     * The number of threads in the pool.
+     */
     public ErrorHandlingThreadPool(int threads) {
         super(
             threads, // core threads
@@ -43,6 +54,27 @@ class ErrorHandlingThreadPool extends ThreadPoolExecutor {
             );
     }
     
+    /**
+     * <p>Method invoked upon completion of execution of the given Runnable. 
+     * This method is invoked by the thread that executed the task. 
+     * If non-null, the Throwable is the uncaught RuntimeException or 
+     * Error that caused execution to terminate abruptly.</p>
+     * <p>Note: When actions are enclosed in tasks (such as FutureTask) either explicitly 
+     * or via methods such as submit, these task objects catch and maintain 
+     * computational exceptions, and so they do not cause abrupt termination, 
+     * and the internal exceptions are not passed to this method.</p>
+     * <p>This implementation does nothing, but may be customized in subclasses. 
+     * Note: To properly nest multiple overridings, subclasses should generally 
+     * invoke super.afterExecute at the beginning of this method.</p>
+     * 
+     * @param r
+     * The runnable that has completed its execution.
+     * 
+     * @param t 
+     * The throwable that has caused the runnable to terminate, or null if none.
+     * 
+     * @see java.util.concurrent.ThreadPoolExecutor.afterExecute(Runnable r, Throwable t)
+     */
     @Override
     protected void afterExecute(Runnable r, Throwable t) {
         super.afterExecute(r, t);
@@ -66,6 +98,10 @@ class ErrorHandlingThreadPool extends ThreadPoolExecutor {
         }
     }
 
+    /**
+     * throw the first error that occurred in the thread pool into the current thread,
+     * wrapped in a runtime exception.
+     */
     public void errors() {
         super.terminated();
         if (!errors.isEmpty()) {

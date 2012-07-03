@@ -25,15 +25,75 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author jweile
+ * <p>A pipeline that consists of a chain nodes. Al nodes run in parallel. Each node 
+ * receives chunks of data from its predecessor, processes them and passes them on
+ * to its successor. Simply add nodes to the pipeline and call the start method.
+ * Each pipeline must start with a <code>StartNode</code> and end with an 
+ * <code>EndNode</code>.</p>
+ * 
+ * <p>How to use the pipeline API:</p>
+ * <code><pre>Pipeline p = new Pipeline();
+        
+p.addNode(new StartNode&lt;String&gt;("n1") {
+
+    int i = 0;
+    String[] list = {"a","b","c","d","e","f","g"};
+
+    public String process(Void v) {
+        if (i &lt; list.length) {
+            return list[i++];
+        } else {
+            return null;
+        }
+    }
+});
+
+p.addNode(new Node&lt;String,String&gt;("n2") {
+
+    public String process(String in) {
+        return in;
+    }
+
+});
+
+p.addNode(new EndNode&lt;String&gt;("n3") {
+
+    public Void process(String in) {
+        System.out.println(in);
+        return null;
+    }
+
+});
+
+p.start();</pre></code>
+ * 
+ * 
+ * @author Jochen Weile <jochenweile@gmail.com>
  */
 public class Pipeline {
     
+    /**
+     * the list of nodes
+     */
     private List<Node> nodeList = new ArrayList<Node>();
     
+    /**
+     * The exchanger exposed by the last node that was added.
+     */
     private Exchanger<Queue<?>> lastEx = null;
     
+    /**
+     * Adds a node to the pipeline.
+     * 
+     * @param <I>
+     * The input data type.
+     * 
+     * @param <O>
+     * The output data type.
+     * 
+     * @param n 
+     * The node to add.
+     */
     public <I,O> void addNode(Node<I,O> n) {
         if (nodeList.isEmpty()) {
             if (!(n instanceof StartNode)) {
@@ -50,6 +110,9 @@ public class Pipeline {
         nodeList.add(n);
     }
     
+    /**
+     * Activate the pipeline.
+     */
     public void start() {
         
         if (nodeList.isEmpty()) {

@@ -21,15 +21,23 @@ import java.util.Queue;
 import java.util.logging.Logger;
 
 /**
- *
- * @author jweile
+ * The last node in a pipeline. Receives input objects of type <code>I</code>.
+ * 
+ * @author Jochen Weile <jochenweile@gmail.com>
  */
 public abstract class EndNode<I> extends Node<I,Void> {
 
+    /**
+     * Constructor.
+     * @param name The node name.
+     */
     public EndNode(String name) {
         super(name);
     }
 
+    /**
+     * The run method that is executed by the pipeline executor.
+     */
     @Override
     public void run() {
         

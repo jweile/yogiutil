@@ -17,7 +17,8 @@
 package de.jweile.yogiutil;
 
 /**
- *
+ * A pair of two things of type T.
+ * 
  * @author jweile
  */
 public class Pair<T> {
