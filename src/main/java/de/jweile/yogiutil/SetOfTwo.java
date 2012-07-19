@@ -16,17 +16,37 @@
  */
 package de.jweile.yogiutil;
 
-/**
- * A pair of two things of type T.
- * 
- * @author jweile
- */
-public class Pair<T> {
-    private T a,b;
+import java.util.Comparator;
 
-    public Pair(T a, T b) {
-        this.a = a;
-        this.b = b;
+/**
+ *
+ * @author Jochen Weile <jochenweile@gmail.com>
+ */
+public class SetOfTwo<T> {
+    
+    private T a, b;
+
+    public SetOfTwo(T a, T b) {
+        if (!(a instanceof Comparable)) {
+            throw new RuntimeException("Elements need to be Comparable!");
+        }
+        if (((Comparable<T>)a).compareTo(b) <= 0) {
+            this.a = a;
+            this.b = b;
+        } else {
+            this.b = a;
+            this.a = b;
+        }
+    }
+    
+    public SetOfTwo(T a, T b, Comparator<T> comp) {
+        if (comp.compare(a, b) <= 0) {
+            this.a = a;
+            this.b = b;
+        } else {
+            this.b = a;
+            this.a = b;
+        }
     }
 
     public T getA() {
@@ -36,6 +56,8 @@ public class Pair<T> {
     public T getB() {
         return b;
     }
+    
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -45,7 +67,7 @@ public class Pair<T> {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Pair<T> other = (Pair<T>) obj;
+        final SetOfTwo<T> other = (SetOfTwo<T>) obj;
         if (this.a != other.a && (this.a == null || !this.a.equals(other.a))) {
             return false;
         }
@@ -58,20 +80,20 @@ public class Pair<T> {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 61 * hash + (this.a != null ? this.a.hashCode() : 0);
-        hash = 61 * hash + (this.b != null ? this.b.hashCode() : 0);
+        hash = 59 * hash + (this.a != null ? this.a.hashCode() : 0);
+        hash = 59 * hash + (this.b != null ? this.b.hashCode() : 0);
         return hash;
     }
 
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder()
-                .append("(")
-                .append(a.toString())
+        return new StringBuilder()
+                .append("{")
+                .append(a)
                 .append(",")
-                .append(b.toString())
-                .append(")");
-        return out.toString();
+                .append(b)
+                .append("}")
+                .toString();
     }
     
     

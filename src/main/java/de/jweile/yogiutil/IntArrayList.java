@@ -40,7 +40,13 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
     }
     
     public IntArrayList(Collection<Integer> c) {
+        this();
         addAll(c);
+    }
+    
+    public IntArrayList(int[] init) {
+        this();
+        addAll(init);
     }
 
     @Override
@@ -90,6 +96,12 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
         array[i] = e;
         size++;
         
+    }
+    
+    public void addAll(int[] ints) {
+        for (int i : ints) {
+            add(i);
+        }
     }
 
     @Override
