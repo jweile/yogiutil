@@ -56,6 +56,8 @@ public class CliProgressBar {
      */
     public void next() {
         
+        curr++;
+        
         int bars = curr * 70 / max;
         int percent = curr * 100 / max;
         
@@ -89,7 +91,7 @@ public class CliProgressBar {
         }
         
         
-        if (++curr == max) {
+        if (curr == max) {
             System.out.println("\nDone! Elapsed: "+time(elapsed));
         }
     }
