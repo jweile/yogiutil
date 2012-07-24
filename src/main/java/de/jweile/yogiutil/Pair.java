@@ -16,12 +16,15 @@
  */
 package de.jweile.yogiutil;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 /**
  * A pair of two things of type T.
  * 
  * @author jweile
  */
-public class Pair<T> {
+public class Pair<T> implements Iterable<T> {
     private T a,b;
 
     public Pair(T a, T b) {
@@ -74,6 +77,34 @@ public class Pair<T> {
         return out.toString();
     }
     
-    
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+
+            private int i = 0;
+            
+            @Override
+            public boolean hasNext() {
+                return i < 2;
+            }
+
+            @Override
+            public T next() {
+                switch(i++) {
+                    case 0:
+                        return a;
+                    case 1:
+                        return b;
+                    default:
+                        throw new NoSuchElementException();
+                }
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Not supported.");
+            }
+        };
+    }
     
 }

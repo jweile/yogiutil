@@ -17,25 +17,24 @@
 package de.jweile.yogiutil;
 
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  *
  * @author Jochen Weile <jochenweile@gmail.com>
  */
-public class SetOfTwo<T> {
+public class SetOfTwo<T> implements Iterable<T> {
     
     private T a, b;
 
-    public SetOfTwo(T a, T b) {
-        if (!(a instanceof Comparable)) {
-            throw new RuntimeException("Elements need to be Comparable!");
-        }
-        if (((Comparable<T>)a).compareTo(b) <= 0) {
-            this.a = a;
-            this.b = b;
+    public SetOfTwo(Comparable<T> a, Comparable<T> b) {
+        if (a.compareTo((T)b) <= 0) {
+            this.a = (T)a;
+            this.b = (T)b;
         } else {
-            this.b = a;
-            this.a = b;
+            this.b = (T)a;
+            this.a = (T)b;
         }
     }
     
@@ -94,6 +93,36 @@ public class SetOfTwo<T> {
                 .append(b)
                 .append("}")
                 .toString();
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+
+            private int i = 0;
+            
+            @Override
+            public boolean hasNext() {
+                return i < 2;
+            }
+
+            @Override
+            public T next() {
+                switch(i++) {
+                    case 0:
+                        return a;
+                    case 1:
+                        return b;
+                    default:
+                        throw new NoSuchElementException();
+                }
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Not supported.");
+            }
+        };
     }
     
     
